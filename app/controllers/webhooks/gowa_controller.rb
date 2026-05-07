@@ -1,5 +1,4 @@
-class Webhooks::GowaController < ApplicationController
-  skip_before_action :verify_authenticity_token
+class Webhooks::GowaController < ActionController::API
 
   def receive
     channel = Channel::QrcodeWhatsapp.find_by(webhook_secret: params[:secret])

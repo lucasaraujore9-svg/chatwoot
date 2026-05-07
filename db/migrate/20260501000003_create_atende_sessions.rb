@@ -17,7 +17,8 @@ class CreateAtendeSessions < ActiveRecord::Migration[7.0]
     end
 
     add_index :atende_sessions, :conversation_id
-    add_index :atende_sessions, [:account_id, :status, :last_activity_at]
+    add_index :atende_sessions, [:account_id, :status, :last_activity_at],
+              name: 'idx_atende_sessions_account_status_activity'
     add_index :atende_sessions, [:conversation_id, :status],
               unique: true,
               where: "status = 'active'",

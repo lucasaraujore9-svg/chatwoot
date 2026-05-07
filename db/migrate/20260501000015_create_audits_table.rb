@@ -1,5 +1,7 @@
 class CreateAuditsTable < ActiveRecord::Migration[7.0]
   def change
+    return if table_exists?(:audits)
+
     create_table :audits do |t|
       t.column :auditable_id, :integer
       t.column :auditable_type, :string

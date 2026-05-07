@@ -24,10 +24,12 @@
 - name: ip_lookup
   display_name: IP Lookup
   enabled: false
+- name: custom_branding
+  display_name: Custom Branding
+  enabled: true
 - name: disable_branding
   display_name: Disable Branding
-  enabled: false
-  premium: true
+  enabled: true
 - name: email_continuity_on_api_channel
   display_name: Email Continuity on API Channel
   enabled: false
@@ -102,8 +104,7 @@
   enabled: false
 - name: audit_logs
   display_name: Audit Logs
-  enabled: false
-  premium: true
+  enabled: true
 - name: custom_tools
   display_name: Custom Tools
   enabled: false
@@ -122,8 +123,7 @@
   chatwoot_internal: true
 - name: sla
   display_name: SLA
-  enabled: false
-  premium: true
+  enabled: true
   help_url: https://chwt.app/hc/sla
 - name: help_center_embedding_search
   display_name: Help Center Embedding Search
@@ -139,8 +139,7 @@
   premium: true
 - name: custom_roles
   display_name: Custom Roles
-  enabled: false
-  premium: true
+  enabled: true
 - name: chatwoot_v4
   display_name: Chatwoot V4
   enabled: true
@@ -241,3 +240,25 @@
   display_name: Advanced Assignment
   enabled: false
   premium: true
+# Atende·AI features
+- name: atende_bots
+  display_name: Atende·AI Bots & IA
+  enabled: true
+- name: atende_flows
+  display_name: Atende·AI Fluxos
+  enabled: true
+- name: atende_agents
+  display_name: Atende·AI Agentes IA
+  enabled: true
+- name: qrcode_whatsapp
+  display_name: QrCode WhatsApp
+  enabled: true
+- name: atende_copilot
+  display_name: Atende·AI Copilot
+  enabled: true
+- name: atende_sla
+  display_name: Atende·AI SLA
+  enabled: true
+- name: audit_logs_atende
+  display_name: Atende·AI Audit Logs
+  enabled: true

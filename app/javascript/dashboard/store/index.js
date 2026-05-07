@@ -58,6 +58,9 @@ import copilotMessages from './captain/copilotMessages';
 import captainScenarios from './captain/scenarios';
 import captainTools from './captain/tools';
 import captainCustomTools from './captain/customTools';
+import atendeFlows from './modules/atende/flows';
+import atendeSessions from './modules/atende/sessions';
+import atendeAgents from './modules/atende/agents';
 
 const plugins = [];
 
@@ -121,6 +124,9 @@ export default createStore({
     captainScenarios,
     captainTools,
     captainCustomTools,
+    'atende/flows': atendeFlows,
+    'atende/sessions': atendeSessions,
+    'atende/agents': atendeAgents,
   },
   plugins,
 });

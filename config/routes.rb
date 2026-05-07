@@ -373,6 +373,46 @@ Rails.application.routes.draw do
           end
 
           resources :upload, only: [:create]
+
+          # ----------------------------------
+          # Atende·AI routes (Block 2 — issue 029)
+          namespace :atende do
+            resources :flows do
+              member do
+                post :publish
+                post :unpublish
+              end
+            end
+            resources :sessions, only: [:index, :show]
+            resources :account_variables
+            resources :inbox_assignments
+            resources :agents do
+              member { post :playground }
+            end
+            resources :llm_credentials do
+              member { post :validate }
+            end
+            resources :agent_messages, only: [:index]
+            resources :agent_capacity_policies
+            resources :inbox_capacity_limits
+            resources :audit_logs, only: [:index, :show]
+            resources :custom_roles
+            resources :companies do
+              resources :contacts, only: [:index, :create, :destroy], module: :companies
+            end
+            resources :copilot_threads, only: [:show, :create] do
+              resources :copilot_messages, only: [:index, :create]
+            end
+            resources :qrcode_inboxes, only: [:create, :destroy] do
+              member do
+                get :qr_code
+                post :disconnect
+              end
+            end
+            resources :sla_policies
+            resources :applied_slas, only: [:index, :show]
+          end
+          # ----------------------------------
         end
       end
       # end of account scoped api routes
@@ -586,6 +626,7 @@ Rails.application.routes.draw do
   post 'webhooks/instagram', to: 'webhooks/instagram#events'
   post 'webhooks/tiktok', to: 'webhooks/tiktok#events'
   post 'webhooks/shopify', to: 'webhooks/shopify#events'
+  post 'webhooks/gowa/:secret', to: 'webhooks/gowa#receive'
 
   namespace :twitter do
     resource :callback, only: [:show]

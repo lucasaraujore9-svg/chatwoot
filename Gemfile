@@ -73,6 +73,10 @@ gem 'searchkick'
 gem 'opensearch-ruby'
 gem 'faraday_middleware-aws-sigv4'
 
+# Atende·AI — GOWA integration
+gem 'faraday', '~> 2.9'
+gem 'faraday-retry', '~> 2.2'
+
 ##--- gems for server & infra configuration ---##
 gem 'dotenv-rails', '>= 3.0.0'
 gem 'foreman'

@@ -382,6 +382,50 @@ const menuItems = computed(() => {
       ],
     },
     {
+      name: 'AtendeBots',
+      icon: 'i-lucide-bot',
+      label: t('SIDEBAR.ATENDE_BOTS'),
+      activeOn: [
+        'atende_flows',
+        'atende_flow_edit',
+        'atende_agents',
+        'atende_agent_edit',
+        'atende_agent_playground',
+        'atende_sessions',
+        'atende_variables',
+      ],
+      children: [
+        {
+          name: 'Atende Flows',
+          label: t('SIDEBAR.ATENDE_FLOWS'),
+          activeOn: ['atende_flows', 'atende_flow_edit'],
+          to: { name: 'atende_flows' },
+        },
+        {
+          name: 'Atende Agents',
+          label: t('SIDEBAR.ATENDE_AGENTS'),
+          activeOn: [
+            'atende_agents',
+            'atende_agent_edit',
+            'atende_agent_playground',
+          ],
+          to: { name: 'atende_agents' },
+        },
+        {
+          name: 'Atende Sessions',
+          label: t('SIDEBAR.ATENDE_SESSIONS'),
+          activeOn: ['atende_sessions'],
+          to: { name: 'atende_sessions' },
+        },
+        {
+          name: 'Atende Variables',
+          label: t('SIDEBAR.ATENDE_VARIABLES'),
+          activeOn: ['atende_variables'],
+          to: { name: 'atende_variables' },
+        },
+      ],
+    },
+    {
       name: 'Contacts',
       label: t('SIDEBAR.CONTACTS'),
       icon: 'i-lucide-contact',

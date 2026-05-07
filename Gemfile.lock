@@ -1072,6 +1072,8 @@ DEPENDENCIES
   facebook-messenger
   factory_bot_rails (>= 6.4.3)
   faker
+  faraday (~> 2.9)
+  faraday-retry (~> 2.2)
   faraday_middleware-aws-sigv4
   fcm
   flag_shih_tzu

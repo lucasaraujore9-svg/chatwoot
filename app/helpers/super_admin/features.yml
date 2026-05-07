@@ -144,3 +144,25 @@ shopify:
   enabled: true
   icon: 'icon-shopify'
   config_key: 'shopify'
+
+# ------- Atende·AI Features ------- #
+atende_flows:
+  name: 'Atende·AI — Fluxos Visuais'
+  description: 'Motor de fluxos visuais (builder + execução). Funciona em qualquer inbox.'
+  enabled: true
+  icon: 'icon-git-branch-line'
+  config_key: 'atende_flows'
+
+atende_agents:
+  name: 'Atende·AI — Agentes IA'
+  description: 'Agentes IA multi-provider (OpenAI, Anthropic, Google, Ollama). Funciona em qualquer inbox.'
+  enabled: true
+  icon: 'icon-robot-line'
+  config_key: 'atende_agents'
+
+qrcode_whatsapp:
+  name: 'Atende·AI — WhatsApp via QR Code'
+  description: 'Canal WhatsApp não-oficial via GOWA (QR Code). Coexiste com WhatsApp Cloud (Meta).'
+  enabled: true
+  icon: 'icon-whatsapp-line'
+  config_key: 'qrcode_whatsapp'

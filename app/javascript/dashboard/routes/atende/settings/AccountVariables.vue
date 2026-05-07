@@ -35,7 +35,7 @@ const showModal = ref(false);
         </thead>
         <tbody class="divide-y divide-slate-100">
           <tr v-for="v in variables" :key="v.id" class="hover:bg-slate-50">
-            <td class="px-4 py-2 font-mono text-slate-700">{{ '{{' }} {{ v.key }} {{ '}}' }}</td>
+            <td class="px-4 py-2 font-mono text-slate-700">&#123;&#123; {{ v.key }} &#125;&#125;</td>
             <td class="px-4 py-2 text-slate-600">
               <span v-if="v.isSecret" class="text-slate-400 italic">&#9679; Secreto</span>
               <span v-else>{{ v.value }}</span>

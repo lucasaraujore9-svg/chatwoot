@@ -1,4 +1,4 @@
-class CreateAtendeSLAPolicies < ActiveRecord::Migration[7.0]
+class CreateAtendeSlaPolicies < ActiveRecord::Migration[7.0]
   def change
     create_table :atende_sla_policies do |t|
       t.bigint :account_id, null: false

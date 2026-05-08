@@ -3,7 +3,7 @@ module Atende
     self.table_name = 'atende_agent_capacity_policies'
 
     belongs_to :account
-    belongs_to :agent, class_name: '::Agent'
+    belongs_to :agent, class_name: '::User'
 
     validates :account_id, :agent_id, :max_conversations, presence: true
     validates :max_conversations, numericality: { greater_than: 0, less_than_or_equal_to: 1000 }

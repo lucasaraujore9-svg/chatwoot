@@ -14,7 +14,7 @@ class FixAtendeSchemaMismatches < ActiveRecord::Migration[7.0]
       add_index :atende_agent_capacity_policies, :agent_id
       add_index :atende_agent_capacity_policies, [:account_id, :agent_id], unique: true,
                                                                            name: 'idx_atende_capacity_policies_account_agent'
-      add_foreign_key :atende_agent_capacity_policies, :agents, on_delete: :cascade
+      add_foreign_key :atende_agent_capacity_policies, :users, column: :agent_id, on_delete: :cascade
     end
 
     # 3. atende_copilot_messages: model belongs_to :account, validates account_id

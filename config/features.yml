@@ -240,25 +240,26 @@
   display_name: Advanced Assignment
   enabled: false
   premium: true
-# Atende·AI features
+# Atende·AI features — enabled: false to avoid bigint overflow (71 features exceeds 63-bit limit)
+# Enable per-account via Super Admin UI after account creation
 - name: atende_bots
   display_name: Atende·AI Bots & IA
-  enabled: true
+  enabled: false
 - name: atende_flows
   display_name: Atende·AI Fluxos
-  enabled: true
+  enabled: false
 - name: atende_agents
   display_name: Atende·AI Agentes IA
-  enabled: true
+  enabled: false
 - name: qrcode_whatsapp
   display_name: QrCode WhatsApp
-  enabled: true
+  enabled: false
 - name: atende_copilot
   display_name: Atende·AI Copilot
-  enabled: true
+  enabled: false
 - name: atende_sla
   display_name: Atende·AI SLA
-  enabled: true
+  enabled: false
 - name: audit_logs_atende
   display_name: Atende·AI Audit Logs
-  enabled: true
+  enabled: false

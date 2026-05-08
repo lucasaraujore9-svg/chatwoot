@@ -1,3 +1,27 @@
+# == Schema Information
+#
+# Table name: atende_flows
+#
+#  id           :bigint           not null, primary key
+#  description  :text
+#  graph        :jsonb
+#  is_published :boolean          default(FALSE), not null
+#  name         :string           not null
+#  status       :string           default("draft"), not null
+#  version      :integer          default(1), not null
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  account_id   :bigint           not null
+#
+# Indexes
+#
+#  index_atende_flows_on_account_id_and_is_published  (account_id,is_published)
+#  index_atende_flows_on_account_id_and_status        (account_id,status)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (account_id => accounts.id) ON DELETE => cascade
+#
 module Atende
   class Flow < ApplicationRecord
     self.table_name = 'atende_flows'

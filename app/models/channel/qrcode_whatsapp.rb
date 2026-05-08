@@ -1,3 +1,28 @@
+# == Schema Information
+#
+# Table name: channel_qrcode_whatsapps
+#
+#  id              :bigint           not null, primary key
+#  phone_number    :string
+#  proxy_url       :string
+#  qr_code_data    :text
+#  status          :string           default("disconnected"), not null
+#  webhook_secret  :string           default(""), not null
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  account_id      :bigint           not null
+#  gowa_session_id :string           default(""), not null
+#
+# Indexes
+#
+#  index_channel_qrcode_whatsapps_on_account_id       (account_id)
+#  index_channel_qrcode_whatsapps_on_gowa_session_id  (gowa_session_id) UNIQUE
+#  index_channel_qrcode_whatsapps_on_webhook_secret   (webhook_secret) UNIQUE
+#
+# Foreign Keys
+#
+#  fk_rails_...  (account_id => accounts.id) ON DELETE => cascade
+#
 class Channel::QrcodeWhatsapp < ApplicationRecord
   self.table_name = 'channel_qrcode_whatsapps'
 

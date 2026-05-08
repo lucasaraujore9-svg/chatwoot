@@ -5,6 +5,8 @@ import SignupForm from './components/Signup/Form.vue';
 import Testimonials from './components/Testimonials/Index.vue';
 import Spinner from 'shared/components/Spinner.vue';
 import signupBg from 'assets/images/auth/signup-bg.jpg';
+import atendeLogoSrc from 'dashboard/assets/images/atende-logo.svg';
+import atendeLogoDarkSrc from 'dashboard/assets/images/atende-logo-dark.svg';
 
 const store = useStore();
 
@@ -12,6 +14,14 @@ const isLoading = ref(false);
 const globalConfig = computed(() => store.getters['globalConfig/get']);
 const isAChatwootInstance = computed(
   () => globalConfig.value.installationName === 'Chatwoot'
+);
+
+const logoSrc = computed(() => globalConfig.value.logo || atendeLogoSrc);
+const logoDarkSrc = computed(
+  () => globalConfig.value.logoDark || atendeLogoDarkSrc
+);
+const installationName = computed(
+  () => globalConfig.value.installationName || 'Atende·AI'
 );
 
 onBeforeMount(() => {
@@ -40,14 +50,13 @@ const resizeContainers = () => {
         <div class="max-w-[420px] w-full">
           <div class="mb-6">
             <img
-              :src="globalConfig.logo"
-              :alt="globalConfig.installationName"
+              :src="logoSrc"
+              :alt="installationName"
               class="block w-auto h-7 dark:hidden"
             />
             <img
-              v-if="globalConfig.logoDark"
-              :src="globalConfig.logoDark"
-              :alt="globalConfig.installationName"
+              :src="logoDarkSrc"
+              :alt="installationName"
               class="hidden w-auto h-7 dark:block"
             />
             <h2 class="mt-6 text-2xl font-semibold text-n-slate-12">

@@ -1,3 +1,28 @@
+# == Schema Information
+#
+# Table name: atende_inbox_assignments
+#
+#  id         :bigint           not null, primary key
+#  is_active  :boolean          default(TRUE), not null
+#  kind       :string           not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  account_id :bigint           not null
+#  agent_id   :bigint
+#  flow_id    :bigint
+#  inbox_id   :bigint           not null
+#
+# Indexes
+#
+#  index_atende_inbox_assignments_on_account_id         (account_id)
+#  index_atende_inbox_assignments_one_active_per_inbox  (inbox_id,is_active) UNIQUE WHERE (is_active = true)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (account_id => accounts.id) ON DELETE => cascade
+#  fk_rails_...  (flow_id => atende_flows.id) ON DELETE => cascade
+#  fk_rails_...  (inbox_id => inboxes.id) ON DELETE => cascade
+#
 module Atende
   class InboxAssignment < ApplicationRecord
     self.table_name = 'atende_inbox_assignments'

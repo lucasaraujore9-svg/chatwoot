@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_04_28_120000) do
+ActiveRecord::Schema[7.1].define(version: 2026_05_01_000028) do
   # These extensions should be enabled to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pg_trgm"
@@ -210,6 +210,252 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_28_120000) do
     t.index ["enabled"], name: "index_assignment_policies_on_enabled"
   end
 
+  create_table "atende_account_variables", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.string "key", null: false
+    t.text "value_encrypted"
+    t.string "var_type", default: "string", null: false
+    t.boolean "is_secret", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "key"], name: "index_atende_account_variables_on_account_id_and_key", unique: true
+  end
+
+  create_table "atende_agent_capacity_policies", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.string "name", null: false
+    t.integer "conversation_limit", null: false
+    t.jsonb "inbox_limits", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "agent_id"
+    t.integer "max_conversations"
+    t.boolean "is_active", default: true, null: false
+    t.index ["account_id", "agent_id"], name: "idx_atende_capacity_policies_account_agent", unique: true
+    t.index ["account_id"], name: "index_atende_agent_capacity_policies_on_account_id"
+    t.index ["agent_id"], name: "index_atende_agent_capacity_policies_on_agent_id"
+  end
+
+  create_table "atende_agent_messages", force: :cascade do |t|
+    t.bigint "session_id", null: false
+    t.string "role", null: false
+    t.text "content"
+    t.jsonb "tool_calls", default: []
+    t.string "tool_call_id"
+    t.string "tool_name"
+    t.integer "prompt_tokens"
+    t.integer "completion_tokens"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["session_id", "created_at"], name: "index_atende_agent_messages_on_session_id_and_created_at"
+  end
+
+  create_table "atende_agents", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "llm_credential_id", null: false
+    t.string "name", null: false
+    t.text "description"
+    t.string "model", null: false
+    t.text "system_prompt"
+    t.decimal "temperature", precision: 3, scale: 2, default: "0.7"
+    t.integer "max_tokens", default: 1000
+    t.integer "history_limit", default: 20
+    t.jsonb "tools_config", default: {}
+    t.jsonb "dynamic_config", default: {}
+    t.string "pause_label"
+    t.string "routing_strategy"
+    t.bigint "routing_agent_id"
+    t.bigint "routing_team_id"
+    t.string "notify_mode"
+    t.text "notify_template"
+    t.boolean "is_active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "is_active"], name: "index_atende_agents_on_account_id_and_is_active"
+  end
+
+  create_table "atende_applied_slas", force: :cascade do |t|
+    t.bigint "sla_policy_id", null: false
+    t.bigint "conversation_id", null: false
+    t.string "sla_status", default: "active", null: false
+    t.datetime "first_response_at"
+    t.datetime "resolved_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "account_id", null: false
+    t.index ["account_id"], name: "index_atende_applied_slas_on_account_id"
+    t.index ["conversation_id"], name: "index_atende_applied_slas_on_conversation_id"
+    t.index ["sla_policy_id", "sla_status"], name: "index_atende_applied_slas_on_sla_policy_id_and_sla_status"
+  end
+
+  create_table "atende_companies", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.string "name", null: false
+    t.string "domain"
+    t.jsonb "custom_attributes", default: {}
+    t.bigint "owner_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "website"
+    t.string "industry"
+    t.text "description"
+    t.jsonb "additional_attributes", default: {}
+    t.index ["account_id", "domain"], name: "index_atende_companies_on_account_id_and_domain"
+    t.index ["account_id", "name"], name: "index_atende_companies_on_account_id_and_name", unique: true
+  end
+
+  create_table "atende_company_contacts", force: :cascade do |t|
+    t.bigint "company_id", null: false
+    t.bigint "contact_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id", "contact_id"], name: "index_atende_company_contacts_on_company_id_and_contact_id", unique: true
+  end
+
+  create_table "atende_copilot_messages", force: :cascade do |t|
+    t.bigint "thread_id", null: false
+    t.string "role", null: false
+    t.text "content"
+    t.string "llm_provider"
+    t.string "llm_model"
+    t.integer "prompt_tokens"
+    t.integer "completion_tokens"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "account_id", null: false
+    t.index ["account_id"], name: "index_atende_copilot_messages_on_account_id"
+    t.index ["thread_id", "created_at"], name: "index_atende_copilot_messages_on_thread_id_and_created_at"
+  end
+
+  create_table "atende_copilot_threads", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "conversation_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["conversation_id", "user_id"], name: "index_atende_copilot_threads_on_conversation_id_and_user_id", unique: true
+  end
+
+  create_table "atende_custom_roles", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.string "name", null: false
+    t.text "description"
+    t.jsonb "permissions", default: []
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "name"], name: "index_atende_custom_roles_on_account_id_and_name", unique: true
+  end
+
+  create_table "atende_flows", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.string "name", null: false
+    t.text "description"
+    t.integer "version", default: 1, null: false
+    t.boolean "is_published", default: false, null: false
+    t.jsonb "graph", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "status", default: "draft", null: false
+    t.index ["account_id", "is_published"], name: "index_atende_flows_on_account_id_and_is_published"
+    t.index ["account_id", "status"], name: "index_atende_flows_on_account_id_and_status"
+  end
+
+  create_table "atende_inbox_assignments", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "inbox_id", null: false
+    t.string "kind", null: false
+    t.bigint "flow_id"
+    t.bigint "agent_id"
+    t.boolean "is_active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_atende_inbox_assignments_on_account_id"
+    t.index ["inbox_id", "is_active"], name: "index_atende_inbox_assignments_one_active_per_inbox", unique: true, where: "(is_active = true)"
+  end
+
+  create_table "atende_inbox_capacity_limits", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "inbox_id", null: false
+    t.integer "conversation_limit", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "inbox_id"], name: "index_atende_inbox_capacity_limits_on_account_id_and_inbox_id", unique: true
+  end
+
+  create_table "atende_llm_credentials", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.string "provider", null: false
+    t.string "label", null: false
+    t.text "api_key_encrypted"
+    t.jsonb "extra_config", default: {}
+    t.boolean "is_default", default: false, null: false
+    t.datetime "last_validated_at"
+    t.string "validation_status", default: "unknown", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "is_default"], name: "index_atende_llm_credentials_one_default_per_account", unique: true, where: "(is_default = true)"
+    t.index ["account_id", "provider"], name: "index_atende_llm_credentials_on_account_id_and_provider"
+  end
+
+  create_table "atende_node_runs", force: :cascade do |t|
+    t.bigint "session_id", null: false
+    t.string "node_id", null: false
+    t.string "node_type", null: false
+    t.string "status", null: false
+    t.jsonb "input", default: {}
+    t.jsonb "output", default: {}
+    t.text "error_message"
+    t.integer "duration_ms"
+    t.datetime "executed_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["session_id", "executed_at"], name: "index_atende_node_runs_on_session_id_and_executed_at"
+  end
+
+  create_table "atende_sessions", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "conversation_id", null: false
+    t.bigint "contact_id", null: false
+    t.bigint "flow_id"
+    t.bigint "agent_id"
+    t.string "kind", null: false
+    t.string "status", default: "active", null: false
+    t.string "current_node_id"
+    t.jsonb "variables", default: {}
+    t.datetime "started_at"
+    t.datetime "last_activity_at"
+    t.datetime "ended_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "status", "last_activity_at"], name: "idx_atende_sessions_account_status_activity"
+    t.index ["conversation_id", "status"], name: "index_atende_sessions_one_active_per_conversation", unique: true, where: "((status)::text = 'active'::text)"
+    t.index ["conversation_id"], name: "index_atende_sessions_on_conversation_id"
+  end
+
+  create_table "atende_sla_events", force: :cascade do |t|
+    t.bigint "applied_sla_id", null: false
+    t.string "event_type", null: false
+    t.datetime "occurred_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["applied_sla_id", "event_type"], name: "index_atende_sla_events_on_applied_sla_id_and_event_type"
+  end
+
+  create_table "atende_sla_policies", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.string "name", null: false
+    t.integer "first_response_time_threshold"
+    t.integer "next_response_time_threshold"
+    t.integer "resolution_time_threshold"
+    t.boolean "business_hours_only", default: false, null: false
+    t.jsonb "conditions", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "is_active", default: true, null: false
+    t.text "description"
+    t.index ["account_id"], name: "index_atende_sla_policies_on_account_id"
+  end
+
   create_table "attachments", id: :serial, force: :cascade do |t|
     t.integer "file_type", default: 0
     t.string "external_url"
@@ -381,11 +627,11 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_28_120000) do
     t.integer "sync_status"
     t.datetime "last_synced_at"
     t.datetime "last_sync_attempted_at"
+    t.index ["account_id", "sync_status"], name: "index_captain_documents_on_account_id_and_sync_status"
     t.index ["account_id"], name: "index_captain_documents_on_account_id"
     t.index ["assistant_id", "external_link"], name: "index_captain_documents_on_assistant_id_and_external_link", unique: true
     t.index ["assistant_id"], name: "index_captain_documents_on_assistant_id"
     t.index ["status"], name: "index_captain_documents_on_status"
-    t.index ["account_id", "sync_status"], name: "index_captain_documents_on_account_id_and_sync_status"
   end
 
   create_table "captain_inboxes", force: :cascade do |t|
@@ -507,6 +753,21 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_28_120000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["line_channel_id"], name: "index_channel_line_on_line_channel_id", unique: true
+  end
+
+  create_table "channel_qrcode_whatsapps", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.string "phone_number"
+    t.string "gowa_session_id", default: "", null: false
+    t.string "proxy_url"
+    t.string "status", default: "disconnected", null: false
+    t.text "qr_code_data"
+    t.string "webhook_secret", default: "", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_channel_qrcode_whatsapps_on_account_id"
+    t.index ["gowa_session_id"], name: "index_channel_qrcode_whatsapps_on_gowa_session_id", unique: true
+    t.index ["webhook_secret"], name: "index_channel_qrcode_whatsapps_on_webhook_secret", unique: true
   end
 
   create_table "channel_sms", force: :cascade do |t|
@@ -650,6 +911,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_28_120000) do
     t.string "country_code", default: ""
     t.boolean "blocked", default: false, null: false
     t.bigint "company_id"
+    t.bigint "default_company_id"
     t.index "lower((email)::text), account_id", name: "index_contacts_on_lower_email_account_id"
     t.index ["account_id", "contact_type"], name: "index_contacts_on_account_id_and_contact_type"
     t.index ["account_id", "email", "phone_number", "identifier"], name: "index_contacts_on_nonempty_fields", where: "(((email)::text <> ''::text) OR ((phone_number)::text <> ''::text) OR ((identifier)::text <> ''::text))"
@@ -658,6 +920,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_28_120000) do
     t.index ["account_id"], name: "index_resolved_contact_account_id", where: "(((email)::text <> ''::text) OR ((phone_number)::text <> ''::text) OR ((identifier)::text <> ''::text))"
     t.index ["blocked"], name: "index_contacts_on_blocked"
     t.index ["company_id"], name: "index_contacts_on_company_id"
+    t.index ["default_company_id"], name: "index_contacts_on_default_company_id"
     t.index ["email", "account_id"], name: "uniq_email_per_account_contact", unique: true
     t.index ["identifier", "account_id"], name: "uniq_identifier_per_account_contact", unique: true
     t.index ["name", "email", "phone_number", "identifier"], name: "index_contacts_on_name_email_phone_number_identifier", opclass: :gin_trgm_ops, using: :gin
@@ -1095,6 +1358,15 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_28_120000) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "portal_members", force: :cascade do |t|
+    t.bigint "portal_id"
+    t.bigint "user_id"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.index ["portal_id", "user_id"], name: "index_portal_members_on_portal_id_and_user_id", unique: true
+    t.index ["user_id", "portal_id"], name: "index_portal_members_on_user_id_and_portal_id", unique: true
+  end
+
   create_table "portals", force: :cascade do |t|
     t.integer "account_id", null: false
     t.string "name", null: false
@@ -1247,6 +1519,14 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_28_120000) do
     t.index ["name", "account_id"], name: "index_teams_on_name_and_account_id", unique: true
   end
 
+  create_table "telegram_bots", id: :serial, force: :cascade do |t|
+    t.string "name"
+    t.string "auth_key"
+    t.integer "account_id"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+  end
+
   create_table "users", id: :serial, force: :cascade do |t|
     t.string "provider", default: "email", null: false
     t.string "uid", default: "", null: false
@@ -1318,6 +1598,41 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_28_120000) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "atende_account_variables", "accounts", on_delete: :cascade
+  add_foreign_key "atende_agent_capacity_policies", "accounts", on_delete: :cascade
+  add_foreign_key "atende_agent_capacity_policies", "users", column: "agent_id", on_delete: :cascade
+  add_foreign_key "atende_agent_messages", "atende_sessions", column: "session_id", on_delete: :cascade
+  add_foreign_key "atende_agents", "accounts", on_delete: :cascade
+  add_foreign_key "atende_agents", "atende_llm_credentials", column: "llm_credential_id", on_delete: :restrict
+  add_foreign_key "atende_applied_slas", "accounts", on_delete: :cascade
+  add_foreign_key "atende_applied_slas", "atende_sla_policies", column: "sla_policy_id", on_delete: :cascade
+  add_foreign_key "atende_applied_slas", "conversations", on_delete: :cascade
+  add_foreign_key "atende_companies", "accounts", on_delete: :cascade
+  add_foreign_key "atende_company_contacts", "atende_companies", column: "company_id", on_delete: :cascade
+  add_foreign_key "atende_company_contacts", "contacts", on_delete: :cascade
+  add_foreign_key "atende_copilot_messages", "accounts", on_delete: :cascade
+  add_foreign_key "atende_copilot_messages", "atende_copilot_threads", column: "thread_id", on_delete: :cascade
+  add_foreign_key "atende_copilot_threads", "accounts", on_delete: :cascade
+  add_foreign_key "atende_copilot_threads", "conversations", on_delete: :cascade
+  add_foreign_key "atende_copilot_threads", "users", on_delete: :cascade
+  add_foreign_key "atende_custom_roles", "accounts", on_delete: :cascade
+  add_foreign_key "atende_flows", "accounts", on_delete: :cascade
+  add_foreign_key "atende_inbox_assignments", "accounts", on_delete: :cascade
+  add_foreign_key "atende_inbox_assignments", "atende_flows", column: "flow_id", on_delete: :cascade
+  add_foreign_key "atende_inbox_assignments", "inboxes", on_delete: :cascade
+  add_foreign_key "atende_inbox_capacity_limits", "accounts", on_delete: :cascade
+  add_foreign_key "atende_inbox_capacity_limits", "inboxes", on_delete: :cascade
+  add_foreign_key "atende_llm_credentials", "accounts", on_delete: :cascade
+  add_foreign_key "atende_node_runs", "atende_sessions", column: "session_id", on_delete: :cascade
+  add_foreign_key "atende_sessions", "accounts", on_delete: :cascade
+  add_foreign_key "atende_sessions", "atende_agents", column: "agent_id", on_delete: :nullify
+  add_foreign_key "atende_sessions", "atende_flows", column: "flow_id", on_delete: :nullify
+  add_foreign_key "atende_sessions", "contacts", on_delete: :cascade
+  add_foreign_key "atende_sessions", "conversations", on_delete: :cascade
+  add_foreign_key "atende_sla_events", "atende_applied_slas", column: "applied_sla_id", on_delete: :cascade
+  add_foreign_key "atende_sla_policies", "accounts", on_delete: :cascade
+  add_foreign_key "channel_qrcode_whatsapps", "accounts", on_delete: :cascade
+  add_foreign_key "contacts", "atende_companies", column: "default_company_id", on_delete: :nullify
   add_foreign_key "inboxes", "portals"
   create_trigger("accounts_after_insert_row_tr", :generated => true, :compatibility => 1).
       on("accounts").

@@ -1,29 +1,21 @@
 <script setup>
 import { useAttrs } from 'vue';
-import { useMapGetter } from 'dashboard/composables/store';
 
 const attrs = useAttrs();
-const globalConfig = useMapGetter('globalConfig/get');
 </script>
 
 <template>
-  <img
-    v-if="globalConfig.logoThumbnail"
-    v-bind="attrs"
-    :src="globalConfig.logoThumbnail"
-  />
   <svg
-    v-else
-    v-once
     v-bind="attrs"
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 200 200"
     width="16"
     height="16"
+    class="text-[#0E0E10] dark:text-[#FAFAF7]"
   >
     <path
       d="M 45,0 L 155,0 C 175.25,0 200,24.75 200,45 L 200,155 C 200,175.25 175.25,200 155,200 L 45,200 C 24.75,200 0,175.25 0,155 L 0,45 C 0,24.75 24.75,0 45,0 Z"
-      fill="#0E0E10"
+      fill="currentColor"
     />
     <circle cx="100" cy="42" r="7" fill="#FF5A1F" />
     <path
